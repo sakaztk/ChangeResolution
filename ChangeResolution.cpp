@@ -16,17 +16,20 @@ static void ShowHelp(char **argv)
 	TCHAR szExt[_MAX_EXT];
 	GetModuleFileName(NULL, szPath, MAX_PATH);
 	_tsplitpath_s(szPath, szDrive, szDir, szFName, szExt);
-	wcout << "Usage:" << endl;
-	wcout << "  " << szFName << " [-list] | [-name] | [-current] | WIDTH HEIGHT | NAME" << endl;
-	wcout << endl;
-	wcout << "Examples:" << endl;
-	wcout << "  " << szFName << " -l        # Show the available resolutions." << endl;
-	wcout << "  " << szFName << " -n        # Show the defined resolution names." << endl;
-	wcout << "  " << szFName << " -c        # Show the current resolution." << endl;
-	wcout << "  " << szFName << " 1024 768  # Change the resolution to 1024x768." << endl;
-	wcout << "  " << szFName << " SXGA      # Change the resolution to SXGA." << endl;
-	wcout << "  " << szFName << " MAX       # Change the resolution to maximum." << endl;
-
+	::wcout << "Usage:" << ::endl;
+	::wcout << "  " << szFName << " [-list] | [-name] | [-current] | WIDTH HEIGHT | NAME" << ::endl;
+	::wcout << ::endl;
+	::wcout << "Options:" << ::endl;
+	::wcout << "  -c, --current #Show the current resolution." << ::endl;
+	::wcout << "  -l, --list    #Show the available resolutions." << ::endl;
+	::wcout << "  -n, --name    #Show the defined resolution names." << ::endl;
+	::wcout << "  WIDTH HEIGHT  #Change the resolution to WIDTH x HEIGHT." << ::endl;
+	::wcout << "  NAME          #Change the resolution to NAME." << ::endl;
+	::wcout << ::endl;
+	::wcout << "Examples:" << ::endl;
+	::wcout << "  " << szFName << " 1024 768  #Change the resolution to 1024x768." << ::endl;
+	::wcout << "  " << szFName << " SXGA      #Change the resolution to SXGA." << ::endl;
+	::wcout << "  " << szFName << " MAX       #Change the resolution to maximum possible." << ::endl;
 }
 
 void ShowList()
@@ -44,7 +47,7 @@ void ShowList()
 		width = ExistDisplayMode.dmPelsWidth;
 		if ((lastH != height) && (lastW != width))
 		{
-			wcout << width << "x" << height << endl;
+			::wcout << width << "x" << height << ::endl;
 			lastW = width;
 			lastH = height;
 		}
@@ -54,33 +57,44 @@ void ShowList()
 void ShowName()
 {
 	DEVMODE ExistDisplayMode;
+	/*
 	int i = 0;
 	while (EnumDisplaySettings(NULL, i, &ExistDisplayMode))
 	{
 		i++;
 	}
+	*/
+	EnumDisplaySettings(NULL, 0, &ExistDisplayMode);
 	int width = ExistDisplayMode.dmPelsWidth;
 	int height = ExistDisplayMode.dmPelsHeight;
 
-	wcout << "Name    Resolution" << endl;
-	wcout << "======  ==========" << endl;
-	wcout << "CGA     320x200" << endl;
-	wcout << "EGA     640x350" << endl;
-	wcout << "DCGA    640x400" << endl;
-	wcout << "SVGA    800x600" << endl;
-	wcout << "XGA     1024x768" << endl;
-	wcout << "HD      1280x720" << endl;
-	wcout << "FWXGA   1366x768" << endl;
-	wcout << "SXGA    1280x1024" << endl;
-	wcout << "XGA++   1600x900" << endl;
-	wcout << "UXGA    1600x1200" << endl;
-	wcout << "FHD     1920x1080" << endl;
-	wcout << "WUXGA   1920x1200" << endl;
-	wcout << "WQHD    2560x1440" << endl;
-	wcout << "WQXGA   2560x1600" << endl;
-	wcout << "4K      3840x2160" << endl;
-	wcout << "------  ----------" << endl;
-	wcout << "MAX     " << width << "x" << height << endl;
+	::wcout << "Name    Resolution" << ::endl;
+	::wcout << "======  ==========" << ::endl;
+	::wcout << "CGA     320x200" << ::endl;
+	::wcout << "EGA     640x350" << ::endl;
+	::wcout << "DCGA    640x400" << ::endl;
+	::wcout << "SVGA    800x600" << ::endl;
+	::wcout << "XGA     1024x768" << ::endl;
+	::wcout << "HD      1280x720" << ::endl;
+	::wcout << "FWXGA   1366x768" << ::endl;
+	::wcout << "SXGA    1280x1024" << ::endl;
+	::wcout << "XGA++   1600x900" << ::endl;
+	::wcout << "UXGA    1600x1200" << ::endl;
+	::wcout << "FHD     1920x1080" << ::endl;
+	::wcout << "WUXGA   1920x1200" << ::endl;
+	::wcout << "WQHD    2560x1440" << ::endl;
+	::wcout << "WQXGA   2560x1600" << ::endl;
+	::wcout << "QSXGA   2560x2048" << ::endl;
+	::wcout << "QHD+    3200x1800" << ::endl;
+	::wcout << "WQSXGA  3200x2048" << ::endl;
+	::wcout << "QUXGA   3200x2400" << ::endl;
+	::wcout << "4K      3840x2160" << ::endl;
+	::wcout << "WQUXGA  3840x2400" << ::endl;
+	::wcout << "5K      5120x2880" << ::endl;
+	::wcout << "8K      7680x4320" << ::endl;
+	::wcout << "16K     17280x4320" << ::endl;
+	::wcout << "------  ----------" << ::endl;
+	::wcout << "MAX     " << width << "x" << height << ::endl;
 }
 
 bool ShowCurrent()
@@ -90,31 +104,15 @@ bool ShowCurrent()
 	deviceMode.dmDriverExtra = 0;
 	if (EnumDisplaySettingsEx(NULL, ENUM_CURRENT_SETTINGS, &deviceMode, 0))
 	{
-		cout << deviceMode.dmPelsWidth << "x" << deviceMode.dmPelsHeight << endl;
+		::wcout << deviceMode.dmPelsWidth << "x" << deviceMode.dmPelsHeight << ::endl;
 	}
 	else
 	{
-		cout << "Failed to get current resolution." << endl;
+		::wcerr << "Failed to get current resolution." << ::endl;
 		return false;
 	}
 	return true;
 }
-
-bool is_option(char *cstr, string option)
-{
-	string str = cstr;
-	transform(str.begin(), str.end(), str.begin(), toupper);
-	transform(option.begin(), option.end(), option.begin(), toupper);
-	for (int i = 0; i<(int)str.size(); i++)
-	{
-		if (!(str[i] == option[i]))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
 
 static BOOL ParseArgs(int argc, char **argv, int *width, int *height)
 {
@@ -135,93 +133,126 @@ static BOOL ParseArgs(int argc, char **argv, int *width, int *height)
 	{
 		arg = argv[1];
 		str = arg;
-		transform(str.begin(), str.end(), str.begin(), toupper);
+		string p = argv[1];
+		transform(p.begin(), p.end(), p.begin(), toupper);
 
-		if (is_option(arg, "-help") || is_option(arg, "/help") || is_option(arg, "-?") || is_option(arg, "/?"))
+		if (p == "-?" || p == "/?" || p == "-H" || p == "/H" || p == "--HELP" || p == "/HELP")
 		{
 			ShowHelp(argv);
 			exit(0);
 		}
-		else if (is_option(arg, "-list") || is_option(arg, "/list"))
+		else if (p == "-L" || p == "/L" || p == "--LIST" || p == "/LIST")
 		{
 			ShowList();
 			exit(0);
 		}
-		else if (is_option(arg, "-name") || is_option(arg, "/name"))
+		else if (p == "-N" || p == "/N" || p == "--NAME" || p == "/NAME")
 		{
 			ShowName();
 			exit(0);
 		}
-		else if (is_option(arg, "-current") || is_option(arg, "/current") || is_option(arg, "-now") || is_option(arg, "/now"))
+		else if (p == "-C" || p == "/C" || p == "--CURRENT" || p == "/CURRENT" || p == "--NOW" || p == "/NOW")
 		{
 			ShowCurrent();
 			exit(0);
 		}
-		else if (str == "CGA")
+		else if (p == "CGA")
 		{
 			*width = 320; *height = 200;
 		}
-		else if (str == "EGA")
+		else if (p == "EGA")
 		{
 			*width = 640; *height = 350;
 		}
-		else if (str == "DCGA")
+		else if (p == "DCGA")
 		{
 			*width = 640; *height = 400;
 		}
-		else if (str == "VGA")
+		else if (p == "VGA")
 		{
 			*width = 640; *height = 480;
 		}
-		else if (str == "SVGA")
+		else if (p == "SVGA")
 		{
 			*width = 800; *height = 600;
 		}
-		else if (str == "XGA")
+		else if (p == "XGA")
 		{
 			*width = 1024; *height = 768;
 		}
-		else if ((str == "HD") || (str == "HD720") || (str == "720P") || (str == "HD720P"))
+		else if ((p == "HD") || (p == "HD720") || (p == "720P") || (p == "HD720P"))
 		{
 			*width = 1280; *height = 720;
 		}
-		else if (str == "FWXGA")
+		else if (p == "FWXGA")
 		{
 			*width = 1366; *height = 768;
 		}
-		else if (str == "SXGA")
+		else if (p == "SXGA")
 		{
 			*width = 1280; *height = 1024;
 		}
-		else if (str == "XGA++")
+		else if (p == "XGA++")
 		{
 			*width = 1600; *height = 900;
 		}
-		else if (str == "UXGA")
+		else if (p == "UXGA")
 		{
 			*width = 1600; *height = 1200;
 		}
-		else if ((str == "FHD") || (str == "FULLHD") || (str == "FULL-HD") || (str == "HD1080") || (str == "1080P"))
+		else if ((p == "FHD") || (p == "FULLHD") || (p == "FULL-HD") || (p == "HD1080") || (p == "1080P"))
 		{
 			*width = 1920; *height = 1080;
 		}
-		else if (str == "WUXGA")
+		else if (p == "WUXGA")
 		{
 			*width = 1920; *height = 1200;
 		}
-		else if (str == "WQHD")
+		else if (p == "WQHD")
 		{
 			*width = 2560; *height = 1440;
 		}
-		else if (str == "WQXGA")
+		else if (p == "WQXGA")
 		{
 			*width = 2560; *height = 1600;
 		}
-		else if ((str == "4K") || (str == "QFHD"))
+		else if (p == "QSXGA")
+		{
+			*width = 2560; *height = 2048;
+		}
+		else if (p == "QHD+")
+		{
+			*width = 3200; *height = 1800;
+		}
+		else if (p == "WQSXGA")
+		{
+			*width = 3200; *height = 2048;
+		}
+		else if (p == "QUXGA")
+		{
+			*width = 3200; *height = 2400;
+		}
+		else if ((p == "4K") || (p == "QFHD"))
 		{
 			*width = 3840; *height = 2160;
 		}
-		else if (str == "MAX")
+		else if (p == "WQUXGA")
+		{
+			*width = 3840; *height = 2400;
+		}
+		else if (p == "5K")
+		{
+			*width = 5120; *height = 2880;
+		}
+		else if (p == "8K")
+		{
+		*width = 7680; *height = 4320;
+		}
+		else if (p == "16K")
+		{
+		*width = 17280; *height = 4320;
+		}
+		else if (p == "MAX")
 		{
 			DEVMODE ExistDisplayMode;
 			int i = 0;
@@ -270,8 +301,7 @@ int main(int argc, char **argv)
 
 	if (!ParseArgs(argc, argv, &newWidth, &newHeight))
 	{
-		cout << "Invalid Argument(s)." << endl << endl;
-		//ShowHelp(argv);
+		::wcerr << "Invalid Argument(s)." << ::endl << ::endl;
 		return EXIT_FAILURE;
 	}
 	deviceMode.dmSize = sizeof(deviceMode);
@@ -287,19 +317,18 @@ int main(int argc, char **argv)
 			if (ChangeDisplaySettingsEx(NULL, &deviceMode, NULL, 0, NULL) == DISP_CHANGE_SUCCESSFUL)
 			{
 				SendMessage(HWND_BROADCAST, WM_DISPLAYCHANGE, (WPARAM)(deviceMode.dmBitsPerPel), MAKELPARAM(newWidth, newHeight));
-				cout << "Succeeded: " << newWidth << "x" << newHeight << endl;
+				::wcout << "Succeeded: " << newWidth << "x" << newHeight << ::endl;
 			}
 			else
 			{
-				cout << "Failed: " << newWidth << "x" << newHeight << endl;
+				::wcerr << "Failed: " << newWidth << "x" << newHeight << ::endl;
 				return EXIT_FAILURE;
 			}
 		}
 		else
 		{
-			cout << "Already Same Resolution: " << newWidth << "x" << newHeight << endl;
+			::wcout << "Already Same Resolution: " << newWidth << "x" << newHeight << ::endl;
 		}
 	}
 	return EXIT_SUCCESS;
 }
-

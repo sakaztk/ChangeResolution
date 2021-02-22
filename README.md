@@ -7,13 +7,17 @@
 ~~~~
 > ChangeResolution.exe /?
 Usage:
-  ChangeResolution [-list] | [-name] | [-current] | width height | name
- 
+  ChangeResolution [-list] | [-name] | [-current] | WIDTH HEIGHT | NAME
+
+Options:
+  -c, --current #Show the current resolution.
+  -l, --list    #Show the available resolutions.
+  -n, --name    #Show the defined resolution names.
+  WIDTH HEIGHT  #Change the resolution to WIDTH x HEIGHT.
+  NAME          #Change the resolution to NAME.
+
 Examples:
-  ChangeResolution -l        # Show the available resolutions.
-  ChangeResolution -n        # Show the defined resolution names.
-  ChangeResolution -c        # Show the current resolution.
-  ChangeResolution 1024 768  # Change the resolution to 1024x768.
-  ChangeResolution SXGA      # Change the resolution to SXGA.
-  ChangeResolution MAX       # Change the resolution to maximum.
+  ChangeResolution 1024 768  #Change the resolution to 1024x768.
+  ChangeResolution SXGA      #Change the resolution to SXGA.
+  ChangeResolution MAX       #Change the resolution to maximum possible.
 ~~~~

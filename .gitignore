@@ -101,6 +101,8 @@ AppPackages/
 
 # Others
 sql/
+.git/
+.vs/
 *.Cache
 ClientBin/
 [Ss]tyle[Cc]op.*
